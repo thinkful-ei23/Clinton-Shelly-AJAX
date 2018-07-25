@@ -29,37 +29,29 @@ const videoList =(function() {
       event.preventDefault();
       store.searchTerm = $('#search-term').val();
       $('#search-term').val('');
-      API.fetchVideos(response => {
-        store.setVideos(API.decorateResponse(response));
-        store.setNextPage(response);
-        store.setPrevPage(response);
-        render();
-      });
+      API.fetchVideos(updateStore);
     });
   }
 
   function handlePrevPage() {
     $('.navigation').on('click', '.js-prev', function() {
       const pageToken = store.prevPage;
-      API.fetchPrev(pageToken, response => {
-        store.setVideos(API.decorateResponse(response));
-        store.setNextPage(response);
-        store.setPrevPage(response);
-        render();
-      });
+      API.fetchVideos(updateStore, pageToken);
     });
   }
 
   function handleNextPage() {
     $('.navigation').on('click', '.js-next', function() {
       const pageToken = store.nextPage;
-      API.fetchNext(pageToken, response => {
-        store.setVideos(API.decorateResponse(response));
-        store.setNextPage(response);
-        store.setPrevPage(response);
-        render();
-      });
+      API.fetchVideos(updateStore, pageToken);
     });
+  }
+
+  function updateStore(response) {
+    store.setVideos(API.decorateResponse(response));
+    store.setNextPage(response);
+    store.setPrevPage(response);
+    render();
   }
 
   function handleVideoHover() {
